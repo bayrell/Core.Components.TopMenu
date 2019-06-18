@@ -1,0 +1,119 @@
+/*!
+ *  Bayrell Core Library
+ *
+ *  (c) Copyright 2018-2019 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+ 
+namespace Core.Components.TopMenu;
+
+use Runtime.RuntimeUtils;
+use Core.UI.Annotations.Event;
+use Core.UI.Events.MouseEvent.MouseClickEvent;
+use Core.UI.Events.MouseEvent.MouseContextMenuEvent;
+use Core.UI.Render.CoreView;
+
+
+struct TopMenu extends CoreView
+{	
+	
+	/**
+	 * Component css
+	 */
+	lambda string css(Dict<string> vars) => 
+		@css{
+			%top_menu{
+				z-index: 10;
+			}
+			%top_menu_items{
+				display: none;
+				position: absolute;
+				z-index: 11;
+			}
+			%top_menu_items_0{
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				position: relative;
+			}
+			%top_menu_items_0 %top_menu_items{
+				background-color: white;
+				border: 1px #ccc solid;
+				min-width: 100px;
+			}
+			%top_menu_item{
+				padding: 5px;
+				cursor: pointer;
+			}
+			%top_menu_item:hover{
+				background-color: #eaeaea;
+			}
+			%top_menu_item:hover > %top_menu_items {
+				display: block;
+			}
+		}
+	;
+	
+	
+	
+	/**
+	 * Component render
+	 */
+	lambda Collection<UIStruct> render(TopMenuModel model, UIStruct ui) =>
+	
+		<div @class='top_menu'>
+			{ static::renderItems(ui, 0) }
+		</div>
+	;
+	
+	
+	
+	/**
+	 * Render items
+	 */
+	lambda Collection<UIStruct> renderItems(UIStruct ui, int level)
+	{
+		if (ui.children == null) return "";
+		string class_name = "top_menu_items top_menu_items_" ~ level;
+		
+		return 
+			<div @class={ class_name }>
+				{ ui.children.map(
+					Collection<UIStruct> (UIStruct item) use (level)
+					{
+						string title = item.props.get("title", "");
+						string tag = item.props.get("tag", "");
+						string icon = item.props.get("icon", "");
+						string class_name = "top_menu_item top_menu_item_" ~ level;
+						
+						Collection<UIStruct> res = 
+							<div @class={ class_name } tag={ tag }
+								@annotations=[
+									new Event{"event": classof MouseClickEvent, "method_name": "onMenuItemClick" }
+								]
+							>
+								<div @class='top_menu_item_icon' icon={ icon }></div>
+								<div @class='top_menu_item_label'>{ title }</div>
+								{ static::renderItems(item, level + 1) }
+							</div>
+						;
+						
+						return res;
+					}
+				) }
+			</div>
+		;
+	}
+	
+}
