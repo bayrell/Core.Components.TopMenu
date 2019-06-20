@@ -65,7 +65,7 @@ class ModuleDescription implements ModuleDescriptionInterface, ComponentInterfac
 	[
 		"Core.Components.TopMenu.TopMenu",
 		"Core.Components.TopMenu.TopMenuItem",
-		"Core.Components.TopMenu.TopMenuItemClickEvent",
+		"Core.Components.TopMenu.TopMenuItemEvent",
 		"Core.Components.TopMenu.TopMenuManager",
 		"Core.Components.TopMenu.TopMenuModel",
 		"Core.Components.TopMenu.ModuleDescription",

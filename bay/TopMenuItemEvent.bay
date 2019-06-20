@@ -21,9 +21,11 @@ namespace Core.Components.TopMenu;
 use Runtime.CoreEvent;
 
 
-struct TopMenuItemClickEvent extends CoreEvent
+struct TopMenuItemEvent extends CoreEvent
 {
+	const string CLICK="click";
 	
+	public string kind = "";
 	public string tag = "";
 	
 }

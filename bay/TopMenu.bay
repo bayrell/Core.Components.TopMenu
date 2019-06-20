@@ -93,14 +93,19 @@ struct TopMenu extends CoreView
 					Collection<UIStruct> (UIStruct item) use (level)
 					{
 						string title = item.props.get("title", "");
-						string tag = item.props.get("tag", "");
+						string tag = item.props.get("@tag", "", "string");
 						string icon = item.props.get("icon", "");
 						string class_name = "top_menu_item top_menu_item_" ~ level;
 						
 						Collection<UIStruct> res = 
-							<div @class={ class_name } tag={ tag }
+							<div @class={ class_name } @tag={ tag }
 								@annotations=[
-									new Event{"event": classof MouseClickEvent, "method_name": "onMenuItemClick" }
+									new Event
+									{
+										"event": classof MouseClickEvent,
+										"method_name": "onMenuItemClick",
+										"cancel": true,
+									}
 								]
 							>
 								<div @class='top_menu_item_icon' icon={ icon }></div>
